@@ -9,7 +9,7 @@ Implement S-003: a Profile tab that feels like an account home, reflects the act
   - Define role-specific job-summary selectors backed by local job hooks.
   - Choose the prominent activity-card metric and supporting counts for each role.
 
-- [ ] **Phase 2 — Profile interface and account settings**
+- [x] **Phase 2 — Profile interface and account settings**
   - Build the identity header and live activity card using design-system primitives.
   - Build grouped, accessible rows for profile information, informational Language, and app version.
   - Wire Log out from the session feature. Do not render Switch role; changing role requires logout and choosing a role again.

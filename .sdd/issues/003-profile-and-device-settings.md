@@ -14,7 +14,7 @@ Implement S-003: a Profile tab that feels like an account home, reflects the act
   - Build grouped, accessible rows for profile information, informational Language, and app version.
   - Wire Log out from the session feature. Do not render Switch role; changing role requires logout and choosing a role again.
 
-- [ ] **Phase 3 — Device settings handoff**
+- [x] **Phase 3 — Device settings handoff**
   - Implement accessible `Linking.openSettings()` action.
   - Add user-visible failure feedback if the settings app cannot open.
 

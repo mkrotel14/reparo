@@ -1,5 +1,6 @@
 import Constants from 'expo-constants';
-import { ScrollView, Text, View } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { Linking, Pressable, ScrollView, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
 import { AppButton, AppScreen } from '@/design-system/components';
@@ -11,6 +12,7 @@ const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 export function ProfileScreen() {
   const { signOut } = useSession();
   const profile = useProfileSummary();
+  const [settingsError, setSettingsError] = useState(false);
 
   if (!profile) return null;
 
@@ -46,7 +48,10 @@ export function ProfileScreen() {
         </SettingsSection>
         <SettingsSection title="About">
           <SettingsRow label="App version" value={appVersion} />
+          <SettingsRow label="Device settings" onPress={() => openDeviceSettings(setSettingsError)} value="Open" />
         </SettingsSection>
+
+        {settingsError ? <Text accessibilityRole="alert" style={styles.settingsError}>Could not open device settings. Please try again.</Text> : null}
 
         <AppButton accessibilityLabel="Log out" tone="secondary" onPress={() => signOut()}>Log out</AppButton>
       </ScrollView>
@@ -54,12 +59,23 @@ export function ProfileScreen() {
   );
 }
 
-function SettingsSection({ children, title }: { children: React.ReactNode; title: string }) {
+async function openDeviceSettings(setSettingsError: (hasError: boolean) => void) {
+  try {
+    await Linking.openSettings();
+    setSettingsError(false);
+  } catch {
+    setSettingsError(true);
+  }
+}
+
+function SettingsSection({ children, title }: { children: ReactNode; title: string }) {
   return <View style={styles.section}><Text style={styles.sectionTitle}>{title}</Text><View style={styles.settingsCard}>{children}</View></View>;
 }
 
-function SettingsRow({ label, value }: { label: string; value: string }) {
-  return <View accessibilityRole="text" style={styles.settingRow}><Text style={styles.settingLabel}>{label}</Text><Text style={styles.settingValue}>{value}</Text></View>;
+function SettingsRow({ label, onPress, value }: { label: string; onPress?: () => void; value: string }) {
+  const content = <><Text style={styles.settingLabel}>{label}</Text><Text style={styles.settingValue}>{value}</Text></>;
+  if (onPress) return <Pressable accessibilityLabel={label} accessibilityRole="button" onPress={onPress} style={styles.settingRow}>{content}</Pressable>;
+  return <View style={styles.settingRow}>{content}</View>;
 }
 
 const styles = StyleSheet.create((theme) => ({
@@ -83,4 +99,5 @@ const styles = StyleSheet.create((theme) => ({
   settingRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', minHeight: 56, paddingHorizontal: theme.spacing.lg },
   settingLabel: { color: theme.colors.text, fontSize: theme.typography.body, fontWeight: '700' },
   settingValue: { color: theme.colors.textMuted, fontSize: theme.typography.body },
+  settingsError: { color: theme.colors.danger, fontSize: theme.typography.body },
 }));

@@ -30,9 +30,10 @@ export function MyJobsScreen() {
         keyExtractor={(job) => job.id}
         ListEmptyComponent={jobs.isError ? <View style={styles.error}><Text style={styles.empty}>Could not load your jobs.</Text><AppButton accessibilityLabel="Retry jobs" onPress={() => jobs.refetch()}>Retry</AppButton></View> : <Text style={styles.empty}>{jobs.isLoading ? 'Loading your jobs…' : 'No jobs here yet.'}</Text>}
         ListHeaderComponent={<View style={styles.header}><Text style={styles.title}>{isPro ? 'My repair work' : 'My repair requests'}</Text><Text style={styles.description}>{isPro ? 'Jobs you have taken are ready to manage here.' : 'Post a request, then track its repair progress here.'}</Text>{!isPro ? <View style={styles.form}><TextInput accessibilityLabel="Repair job title" onChangeText={setTitle} placeholder="What needs repair?" style={styles.input} value={title} /><TextInput accessibilityLabel="Repair job description" multiline onChangeText={setDescription} placeholder="Add a short description" style={[styles.input, styles.descriptionInput]} value={description} /><AppButton accessibilityLabel="Post a repair job" disabled={createJob.isPending || !title.trim()} onPress={() => { createJob.mutate({ description: description.trim(), title: title.trim() }, { onSuccess: () => { setTitle(''); setDescription(''); } }); }}>Post a repair job</AppButton></View> : null}</View>}
-        renderItem={({ item }) => <JobCard actionLabel={isPro && item.status === 'claimed' ? 'Mark complete' : undefined} job={item} onAction={isPro && item.status === 'claimed' ? () => completeJob.mutate(item.id) : undefined} onPress={() => router.push(`/job/${item.id}`)} />}
+        renderItem={({ item }) => <JobCard actionDisabled={completeJob.isPending} actionLabel={isPro && item.status === 'claimed' ? 'Mark complete' : undefined} job={item} onAction={isPro && item.status === 'claimed' ? () => completeJob.mutate(item.id) : undefined} onPress={() => router.push(`/job/${item.id}`)} />}
       />
       {createJob.isError ? <Text style={styles.mutationError}>Could not post the repair job. Please try again.</Text> : null}
+      {completeJob.isError ? <Text style={styles.mutationError}>Could not complete this repair job. Please try again.</Text> : null}
     </AppScreen>
   );
 }

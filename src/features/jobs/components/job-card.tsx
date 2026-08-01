@@ -6,12 +6,13 @@ import type { RepairJob } from '@/features/jobs/types';
 
 type JobCardProps = {
   actionLabel?: string;
+  actionDisabled?: boolean;
   job: RepairJob;
   onAction?: () => void;
   onPress?: () => void;
 };
 
-export function JobCard({ actionLabel, job, onAction, onPress }: JobCardProps) {
+export function JobCard({ actionDisabled, actionLabel, job, onAction, onPress }: JobCardProps) {
   return (
     <Pressable accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={onPress ? `View ${job.title}` : undefined} onPress={onPress} style={styles.card}>
       <View style={styles.heading}>
@@ -20,7 +21,7 @@ export function JobCard({ actionLabel, job, onAction, onPress }: JobCardProps) {
       </View>
       <Text style={styles.meta}>{job.location} · R${job.budget}</Text>
       {job.description ? <Text style={styles.description}>{job.description}</Text> : null}
-      {actionLabel && onAction ? <AppButton accessibilityLabel={`${actionLabel} ${job.title}`} onPress={onAction}>{actionLabel}</AppButton> : null}
+      {actionLabel && onAction ? <AppButton accessibilityLabel={`${actionLabel} ${job.title}`} disabled={actionDisabled} onPress={onAction}>{actionLabel}</AppButton> : null}
     </Pressable>
   );
 }

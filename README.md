@@ -4,12 +4,16 @@ An Expo React Native test app for a two-role repair marketplace: clients post re
 
 ## Stack
 
-- Expo SDK 57 / React Native 0.86 with the New Architecture
-- Expo Router tabs and stack navigation
-- TanStack Query with feature-owned data hooks
-- FlashList for job feeds
-- React Native Unistyles 3 with adaptive light and dark design tokens
-- Jest, Expo, and React Native Testing Library
+| Library | Why it is used |
+| --- | --- |
+| [Expo](https://expo.dev/) / React Native | Provides a single modern native app codebase and the development-build workflow required by the app’s native modules. |
+| [Expo Router](https://docs.expo.dev/router/introduction/) | Supplies file-based routes, native stacks, tabs, sheets, and iOS large-title navigation without custom navigation glue. |
+| [Expo SQLite](https://docs.expo.dev/versions/latest/sdk/sqlite/) | Keeps the demo’s sessions, identities, and repair jobs durable on-device, including across logout. |
+| [TanStack Query](https://tanstack.com/query/latest) | Owns async job data, caching, mutations, pending states, and invalidation behind feature-level hooks. |
+| [FlashList](https://shopify.github.io/flash-list/) | Renders the Jobs and My Jobs feeds efficiently as the local job list grows. |
+| [React Native Unistyles](https://www.unistyl.es/) | Centralizes semantic design tokens and keeps shared UI responsive to the system light/dark appearance. |
+| [React Native Screens](https://github.com/software-mansion/react-native-screens) and Safe Area Context | Back the native navigation presentation and safe-area handling needed for edge-to-edge iOS layouts. |
+| [Jest](https://jestjs.io/) and [React Native Testing Library](https://callstack.github.io/react-native-testing-library/) | Test data rules, navigation guards, and accessible user-visible behavior without requiring a device for every check. |
 
 ## Project layout
 

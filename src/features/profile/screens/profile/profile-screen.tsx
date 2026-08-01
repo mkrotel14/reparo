@@ -3,7 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { Linking, Pressable, ScrollView, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
-import { AppButton, AppScreen } from '@/design-system/components';
+import { AppButton } from '@/design-system/components';
 import { useProfileSummary } from '@/features/profile/hooks/use-profile-summary';
 import { useSession } from '@/features/session/session-context';
 
@@ -17,45 +17,43 @@ export function ProfileScreen() {
   if (!profile) return null;
 
   return (
-    <AppScreen>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.identity}>
-          <Text accessibilityRole="header" style={styles.name}>{profile.identity.displayName}</Text>
-          <Text style={styles.email}>{profile.identity.email}</Text>
-          <Text style={styles.role}>{profile.identity.roleLabel}</Text>
-          <Text selectable style={styles.localId}>Local ID · {profile.identity.localId}</Text>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.content}>
+      <View style={styles.identity}>
+        <Text accessibilityRole="header" style={styles.name}>{profile.identity.displayName}</Text>
+        <Text style={styles.email}>{profile.identity.email}</Text>
+        <Text style={styles.role}>{profile.identity.roleLabel}</Text>
+        <Text selectable style={styles.localId}>Local ID · {profile.identity.localId}</Text>
+      </View>
+
+      <View style={styles.metricCard}>
+        <Text style={styles.metricValue}>{profile.isLoading ? '—' : profile.summary.primaryMetric.value}</Text>
+        <Text style={styles.metricLabel}>{profile.summary.primaryMetric.label}</Text>
+        <View style={styles.metricDivider} />
+        <View style={styles.supportingMetrics}>
+          {profile.summary.supportingMetrics.map((metric) => (
+            <View key={metric.label} style={styles.supportingMetric}>
+              <Text style={styles.supportingValue}>{profile.isLoading ? '—' : metric.value}</Text>
+              <Text style={styles.supportingLabel}>{metric.label}</Text>
+            </View>
+          ))}
         </View>
+      </View>
 
-        <View style={styles.metricCard}>
-          <Text style={styles.metricValue}>{profile.isLoading ? '—' : profile.summary.primaryMetric.value}</Text>
-          <Text style={styles.metricLabel}>{profile.summary.primaryMetric.label}</Text>
-          <View style={styles.metricDivider} />
-          <View style={styles.supportingMetrics}>
-            {profile.summary.supportingMetrics.map((metric) => (
-              <View key={metric.label} style={styles.supportingMetric}>
-                <Text style={styles.supportingValue}>{profile.isLoading ? '—' : metric.value}</Text>
-                <Text style={styles.supportingLabel}>{metric.label}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
+      <SettingsSection title="Personal info">
+        <SettingsRow label="Profile" value={profile.identity.roleLabel} />
+      </SettingsSection>
+      <SettingsSection title="Preferences">
+        <SettingsRow label="Language" value="English" />
+      </SettingsSection>
+      <SettingsSection title="About">
+        <SettingsRow label="App version" value={appVersion} />
+        <SettingsRow label="Device settings" onPress={() => openDeviceSettings(setSettingsError)} value="Open" />
+      </SettingsSection>
 
-        <SettingsSection title="Personal info">
-          <SettingsRow label="Profile" value={profile.identity.roleLabel} />
-        </SettingsSection>
-        <SettingsSection title="Preferences">
-          <SettingsRow label="Language" value="English" />
-        </SettingsSection>
-        <SettingsSection title="About">
-          <SettingsRow label="App version" value={appVersion} />
-          <SettingsRow label="Device settings" onPress={() => openDeviceSettings(setSettingsError)} value="Open" />
-        </SettingsSection>
+      {settingsError ? <Text accessibilityRole="alert" style={styles.settingsError}>Could not open device settings. Please try again.</Text> : null}
 
-        {settingsError ? <Text accessibilityRole="alert" style={styles.settingsError}>Could not open device settings. Please try again.</Text> : null}
-
-        <AppButton accessibilityLabel="Log out" tone="secondary" onPress={() => signOut()}>Log out</AppButton>
-      </ScrollView>
-    </AppScreen>
+      <AppButton accessibilityLabel="Log out" tone="secondary" onPress={() => signOut()}>Log out</AppButton>
+    </ScrollView>
   );
 }
 
@@ -79,9 +77,9 @@ function SettingsRow({ label, onPress, value }: { label: string; onPress?: () =>
 }
 
 const styles = StyleSheet.create((theme) => ({
-  content: { gap: theme.spacing.xl, padding: theme.spacing.xl },
+  content: { gap: theme.spacing.xl, paddingBottom: theme.spacing.xl, paddingHorizontal: theme.spacing.xl, paddingTop: 0 },
   identity: { alignItems: 'center', gap: theme.spacing.xs },
-  name: { color: theme.colors.text, fontSize: 32, fontWeight: '800' },
+  name: { color: theme.colors.text, fontSize: theme.typography.heading, fontWeight: '800' },
   email: { color: theme.colors.textMuted, fontSize: theme.typography.body },
   role: { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.pill, color: theme.colors.text, fontSize: theme.typography.caption, fontWeight: '700', marginTop: theme.spacing.xs, overflow: 'hidden', paddingHorizontal: theme.spacing.sm, paddingVertical: theme.spacing.xs },
   localId: { color: theme.colors.textMuted, fontSize: theme.typography.caption, marginTop: theme.spacing.xs },

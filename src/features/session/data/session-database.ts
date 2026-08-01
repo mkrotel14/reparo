@@ -34,12 +34,22 @@ export async function migrateSessionDatabase() {
   }
 
   if (version < 2) {
-    await database.execAsync(`
-      ALTER TABLE local_identities ADD COLUMN created_at TEXT;
-      UPDATE local_identities SET created_at = datetime('now') WHERE created_at IS NULL;
-      ALTER TABLE active_session ADD COLUMN created_at TEXT;
-      UPDATE active_session SET created_at = datetime('now') WHERE created_at IS NULL;
-      PRAGMA user_version = 2;
-    `);
+    await database.withExclusiveTransactionAsync(async (transaction) => {
+      const identityColumns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(local_identities)');
+      if (!identityColumns.some((column) => column.name === 'created_at')) {
+        await transaction.execAsync('ALTER TABLE local_identities ADD COLUMN created_at TEXT');
+      }
+
+      const sessionColumns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(active_session)');
+      if (!sessionColumns.some((column) => column.name === 'created_at')) {
+        await transaction.execAsync('ALTER TABLE active_session ADD COLUMN created_at TEXT');
+      }
+
+      await transaction.execAsync(`
+        UPDATE local_identities SET created_at = datetime('now') WHERE created_at IS NULL;
+        UPDATE active_session SET created_at = datetime('now') WHERE created_at IS NULL;
+        PRAGMA user_version = 2;
+      `);
+    });
   }
 }

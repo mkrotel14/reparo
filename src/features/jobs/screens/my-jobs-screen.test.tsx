@@ -6,6 +6,9 @@ import { MyJobsScreen } from '@/features/jobs/screens/my-jobs-screen';
 
 jest.mock('@shopify/flash-list', () => ({ FlashList: require('react-native').FlatList }));
 jest.mock('@/features/session/role-context', () => ({ useRole: () => ({ role: 'client', setRole: jest.fn() }) }));
+jest.mock('@/features/session/session-context', () => ({
+  useSession: () => ({ session: { identityId: 'client-1', role: 'client' } }),
+}));
 
 function Wrapper({ children }: PropsWithChildren) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { gcTime: 0, staleTime: Infinity } } });

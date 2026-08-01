@@ -10,6 +10,9 @@ jest.mock('@shopify/flash-list', () => ({
 jest.mock('@/features/session/role-context', () => ({
   useRole: () => ({ role: 'pro', setRole: jest.fn() }),
 }));
+jest.mock('@/features/session/session-context', () => ({
+  useSession: () => ({ session: { identityId: 'pro-1', role: 'pro' } }),
+}));
 
 function Wrapper({ children }: PropsWithChildren) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { gcTime: 0, staleTime: Infinity } } });

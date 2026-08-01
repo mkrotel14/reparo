@@ -10,7 +10,7 @@ const database = {
   getFirstAsync: jest.fn(),
   withExclusiveTransactionAsync: jest.fn(),
 };
-const transaction = { execAsync: jest.fn() };
+const transaction = { execAsync: jest.fn(), getAllAsync: jest.fn() };
 const mockedGetDatabase = jest.mocked(getSessionDatabase);
 const mockedMigrate = jest.mocked(migrateSessionDatabase);
 
@@ -21,6 +21,7 @@ describe('jobs database migration', () => {
     database.getFirstAsync.mockResolvedValue({ user_version: 2 });
     database.withExclusiveTransactionAsync.mockImplementation(async (callback) => callback(transaction));
     transaction.execAsync.mockResolvedValue(undefined);
+    transaction.getAllAsync.mockResolvedValue([{ name: 'location' }, { name: 'budget' }]);
   });
 
   it('creates job and metadata tables after the session migration', async () => {
@@ -30,5 +31,15 @@ describe('jobs database migration', () => {
     expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('CREATE TABLE IF NOT EXISTS jobs'));
     expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('CREATE TABLE IF NOT EXISTS app_metadata'));
     expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('PRAGMA user_version = 4'));
+  });
+
+  it('repairs an already-versioned database missing job columns', async () => {
+    database.getFirstAsync.mockResolvedValue({ user_version: 4 });
+    transaction.getAllAsync.mockResolvedValue([]);
+
+    await getJobsDatabase();
+
+    expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('ALTER TABLE jobs ADD COLUMN location'));
+    expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('ALTER TABLE jobs ADD COLUMN budget'));
   });
 });

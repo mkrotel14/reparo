@@ -1,2 +1,3 @@
-export { AppButton } from './app-button';
-export { AppScreen } from './app-screen';
+export { AppButton } from './button';
+export { AppScreen } from './screen';
+export { AppTag } from './tag';

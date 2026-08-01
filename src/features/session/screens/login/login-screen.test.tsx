@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { LoginScreen } from '@/features/session/screens/login-screen';
+import { LoginScreen } from './login-screen';
 import { useSession } from '@/features/session/session-context';
 
 jest.mock('@/features/session/session-context', () => ({ useSession: jest.fn() }));

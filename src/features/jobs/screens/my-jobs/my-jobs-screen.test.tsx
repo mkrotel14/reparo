@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
-import { MyJobsScreen } from '@/features/jobs/screens/my-jobs-screen';
+import { MyJobsScreen } from './my-jobs-screen';
 
 jest.mock('@shopify/flash-list', () => ({ FlashList: require('react-native').FlatList }));
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
@@ -18,10 +18,10 @@ function Wrapper({ children }: PropsWithChildren) {
 }
 
 describe('<MyJobsScreen />', () => {
-  it('places repair-job creation in the Client workspace', async () => {
+  it('renders a Client empty state without an inline creation form', async () => {
     await render(<MyJobsScreen />, { wrapper: Wrapper });
 
-    expect(screen.getByText('My repair requests')).toBeOnTheScreen();
-    expect(screen.getByRole('button', { name: 'Post a repair job' })).toBeOnTheScreen();
+    expect(screen.getByText('No jobs here yet.')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'Post a repair job' })).not.toBeOnTheScreen();
   });
 });

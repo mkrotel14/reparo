@@ -8,8 +8,8 @@ export default function AuthenticatedLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="job/new" options={{ headerShown: true, presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.5, 1], title: 'New repair job' }} />
-      <Stack.Screen name="job/[id]" options={{ headerShown: true, presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.5, 1], title: 'Repair job' }} />
+      <Stack.Screen name="job/new" options={{ presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.5, 1] }} />
+      <Stack.Screen name="job/[id]" options={{ presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.5, 1] }} />
     </Stack>
   );
 }

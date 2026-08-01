@@ -4,13 +4,18 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-naviga
 import { Stack } from 'expo-router/stack';
 import { useState } from 'react';
 import { useColorScheme } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
-import { SessionLoadingScreen } from '@/features/session/components/session-loading-screen';
+import { darkTheme, lightTheme } from '@/design-system/tokens/theme';
+
+import { SessionLoadingScreen } from '@/features/session/components/loading/session-loading-screen';
 import { RoleProvider } from '@/features/session/role-context';
 import { SessionProvider, useSession } from '@/features/session/session-context';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const appTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
+  const navigationTheme = { ...(colorScheme === 'dark' ? DarkTheme : DefaultTheme), colors: { ...(colorScheme === 'dark' ? DarkTheme : DefaultTheme).colors, background: appTheme.colors.background, border: appTheme.colors.border, card: appTheme.colors.surface, primary: appTheme.colors.primary, text: appTheme.colors.text } };
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -24,7 +29,8 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <RoleProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <ThemeProvider value={navigationTheme}>
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <RootNavigator />
           </ThemeProvider>
         </RoleProvider>

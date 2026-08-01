@@ -4,13 +4,15 @@ import type { ReactNode } from 'react';
 import TabLayout from '@/app/(app)/(tabs)/_layout';
 import { useSession } from '@/features/session/session-context';
 
-jest.mock('expo-router/tabs', () => {
+jest.mock('expo-router/unstable-native-tabs', () => {
   const { Text: MockText, View: MockView } = require('react-native');
-  const Tabs = ({ children }: { children?: ReactNode }) => <MockView>{children}</MockView>;
-  Tabs.Screen = ({ name, options }: { name: string; options: { href?: string | null } }) => (
-    <MockText>{`${name}:${options.href === null ? 'hidden' : 'visible'}`}</MockText>
+  const NativeTabs = ({ children }: { children?: ReactNode }) => <MockView>{children}</MockView>;
+  NativeTabs.Trigger = ({ hidden, name }: { hidden?: boolean; name: string }) => (
+    <MockText>{`${name}:${hidden ? 'hidden' : 'visible'}`}</MockText>
   );
-  return { Tabs };
+  (NativeTabs.Trigger as any).Icon = () => null;
+  (NativeTabs.Trigger as any).Label = () => null;
+  return { NativeTabs };
 });
 
 jest.mock('@/features/session/session-context', () => ({ useSession: jest.fn() }));
@@ -23,7 +25,7 @@ describe('role tab layout', () => {
 
     await render(<TabLayout />);
 
-    expect(screen.getByText('index:hidden')).toBeOnTheScreen();
+    expect(screen.getByText('jobs:hidden')).toBeOnTheScreen();
     expect(screen.getByText('my-jobs:visible')).toBeOnTheScreen();
   });
 
@@ -32,7 +34,7 @@ describe('role tab layout', () => {
 
     await render(<TabLayout />);
 
-    expect(screen.getByText('index:visible')).toBeOnTheScreen();
+    expect(screen.getByText('jobs:visible')).toBeOnTheScreen();
     expect(screen.getByText('my-jobs:visible')).toBeOnTheScreen();
     expect(screen.getByText('profile:visible')).toBeOnTheScreen();
   });

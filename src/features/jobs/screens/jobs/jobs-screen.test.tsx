@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
-import { JobsScreen } from '@/features/jobs/screens/jobs-screen';
+import { JobsScreen } from './jobs-screen';
 jest.mock('@shopify/flash-list', () => ({
   FlashList: require('react-native').FlatList,
 }));
@@ -24,7 +24,6 @@ describe('<JobsScreen />', () => {
   it('shows open jobs in the Pro workspace', async () => {
     await render(<JobsScreen />, { wrapper: Wrapper });
 
-    expect(screen.getByText('Find your next repair')).toBeOnTheScreen();
     expect(screen.getByText('Leaking kitchen tap')).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Take job Leaking kitchen tap' })).toBeOnTheScreen();
   });

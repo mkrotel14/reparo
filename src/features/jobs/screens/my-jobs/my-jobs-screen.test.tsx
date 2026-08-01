@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
-import { MyJobsScreen } from '@/features/jobs/screens/my-jobs-screen';
+import { MyJobsScreen } from './my-jobs-screen';
 
 jest.mock('@shopify/flash-list', () => ({ FlashList: require('react-native').FlatList }));
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));

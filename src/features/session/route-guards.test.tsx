@@ -24,7 +24,7 @@ jest.mock('expo-router/stack', () => {
   return { Stack };
 });
 
-jest.mock('@/features/session/components/session-loading-screen', () => ({
+jest.mock('@/features/session/components/loading/session-loading-screen', () => ({
   SessionLoadingScreen: () => {
     const { Text: MockText } = require('react-native');
     return <MockText>Restoring session</MockText>;
@@ -60,6 +60,6 @@ describe('session route guards', () => {
 
     await render(<AuthLayout />);
 
-    expect(screen.getByText('Redirect: /(app)/(tabs)')).toBeOnTheScreen();
+    expect(screen.getByText('Redirect: /(app)/(tabs)/my-jobs')).toBeOnTheScreen();
   });
 });

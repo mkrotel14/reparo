@@ -1,22 +1,25 @@
-import { Tabs } from 'expo-router/tabs';
-import { Pressable, Text } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
-import { useRouter } from 'expo-router';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
 import { useSession } from '@/features/session/session-context';
 
 export default function TabLayout() {
-  const router = useRouter();
   const { session } = useSession();
   const isPro = session?.role === 'pro';
 
   return (
-    <Tabs screenOptions={{ headerShown: true }}>
-      <Tabs.Screen name="index" options={{ href: isPro ? undefined : null, title: 'Jobs' }} />
-      <Tabs.Screen name="my-jobs" options={{ title: 'My Jobs', headerRight: isPro ? undefined : () => <Pressable accessibilityLabel="Add repair job" accessibilityRole="button" onPress={() => router.push('/job/new')} style={styles.add}><Text style={styles.addLabel}>+</Text></Pressable> }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
-    </Tabs>
+    <NativeTabs>
+      <NativeTabs.Trigger hidden={!isPro} name="jobs">
+        <NativeTabs.Trigger.Icon md="format_list_bulleted" sf="list.bullet" />
+        <NativeTabs.Trigger.Label>Jobs</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="my-jobs">
+        <NativeTabs.Trigger.Icon md="build" sf="wrench.and.screwdriver" />
+        <NativeTabs.Trigger.Label>My Jobs</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="profile">
+        <NativeTabs.Trigger.Icon md="account_circle" sf="person.circle" />
+        <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({ add: { alignItems: 'center', backgroundColor: theme.colors.primary, borderRadius: theme.radius.pill, height: 30, justifyContent: 'center', marginRight: theme.spacing.sm, width: 30 }, addLabel: { color: theme.colors.onPrimary, fontSize: 24, fontWeight: '500', lineHeight: 28 } }));

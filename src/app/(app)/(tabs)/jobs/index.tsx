@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 
-import { JobsScreen } from '@/features/jobs/screens/jobs-screen';
+import { JobsScreen } from '@/features/jobs/screens/jobs/jobs-screen';
 import { useSession } from '@/features/session/session-context';
 
 export default function JobsRoute() {

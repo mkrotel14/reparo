@@ -12,6 +12,9 @@ jest.mock('@/features/jobs/data/dummyjson-seed', () => ({ seedJobsFromDummyJson:
 jest.mock('@/features/session/session-context', () => ({
   useSession: () => ({ session: { identityId: 'pro-1', role: 'pro' } }),
 }));
+jest.mock('@/features/session/data/session-repository', () => ({
+  sessionRepository: { getIdentity: jest.fn().mockResolvedValue({ identityId: 'client-1', role: 'client' }) },
+}));
 
 const mockedRepository = jest.mocked(jobsRepository);
 

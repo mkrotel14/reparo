@@ -33,7 +33,7 @@ export default function RootLayout() {
   );
 }
 
-function RootNavigator() {
+export function RootNavigator() {
   const { status } = useSession();
   if (status === 'loading') return <SessionLoadingScreen />;
 

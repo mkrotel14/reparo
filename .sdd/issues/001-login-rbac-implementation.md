@@ -1,13 +1,13 @@
 ## Goal
 
-Implement RFC 001: a persisted local Client/Pro session that gates navigation and supports switching role or logout without deleting the shared local job database.
+Implement RFC 001: a persisted local Client/Pro session that gates navigation and supports logout without deleting the shared local job database.
 
 ## Scope
 
 - Fake login with **Continue as Client** and **Continue as Pro**.
 - Stable local UUID identities and persisted session restoration.
 - Navigation guard that prevents tabs from rendering before session restoration resolves.
-- Profile actions for switching role and logout.
+- Profile logout action and role-specific tabs.
 - Role actions clear only the session; local jobs and seed metadata remain intact.
 
 ## Phases
@@ -24,12 +24,12 @@ Implement RFC 001: a persisted local Client/Pro session that gates navigation an
 
 - [x] **Phase 3 — Profile account actions**
   - Display the active local identity and role.
-  - Implement Switch role and Log out.
+  - Implement Log out and show role-specific tabs.
   - Verify these clear only session data, preserving local jobs for the next role.
 
 - [x] **Phase 4 — Tests**
   - Unit-test session repository and hook behavior.
-  - Screen-test initial login, restored session, role selection, switching, and logout.
+  - Screen-test initial login, restored session, role selection, role-specific tabs, and logout.
   - Cover the no-session/loading/authenticated route states.
 
 - [x] **Phase 5 — Quality and handoff**
@@ -41,7 +41,7 @@ Implement RFC 001: a persisted local Client/Pro session that gates navigation an
 - First launch shows the role selector.
 - Selecting a role creates and persists a local UUID session.
 - Relaunch restores the selected role without showing another role's UI.
-- Logout and switching return to the selector while preserving local jobs.
+- Logout returns to the selector while preserving local jobs.
 - Session state, route guard behavior, and profile actions have tests.
 
 ## References

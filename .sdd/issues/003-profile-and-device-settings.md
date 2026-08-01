@@ -10,7 +10,7 @@ Implement S-003: a Profile tab that reflects the active local identity and activ
 
 - [ ] **Phase 2 — Profile interface**
   - Build role, identity, and activity-summary sections using design-system primitives.
-  - Wire Switch role and Log out from the session feature.
+  - Wire Log out from the session feature; role changes happen through the login selector.
 
 - [ ] **Phase 3 — Device settings handoff**
   - Implement accessible `Linking.openSettings()` action.

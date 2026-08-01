@@ -6,7 +6,7 @@
 
 ## User outcome
 
-Clients create and track their own repair jobs. Pros see open jobs, claim one, and complete only work assigned to them. Every action remains visible after logout, role switching, and app restart.
+Clients create and track their own repair jobs. Pros see open jobs, claim one, and complete only work assigned to them. Every action remains visible after logout, a subsequent sign-in with either role, and app restart.
 
 ## Persistence model
 

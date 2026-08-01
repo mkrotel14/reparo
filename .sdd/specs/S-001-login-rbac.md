@@ -5,7 +5,7 @@
 
 ## User outcome
 
-A first-time user chooses Client or Pro. On later launches, the app restores that role before showing authenticated navigation. Either role can log out or switch roles without losing local jobs.
+A first-time user chooses Client or Pro. On later launches, the app restores that role before showing authenticated navigation. To change roles, the user logs out and chooses the other role; local jobs remain intact.
 
 ## Data and state
 
@@ -18,7 +18,7 @@ A first-time user chooses Client or Pro. On later launches, the app restores tha
 
 1. No session → role selector → select Client/Pro → authenticated tabs.
 2. Stored session → startup state → authenticated tabs for its role.
-3. Profile → Switch role/Log out → role selector; jobs remain unchanged.
+3. Profile → Log out → role selector → choose the other role; jobs remain unchanged.
 
 ## Acceptance criteria
 
@@ -30,5 +30,5 @@ A first-time user chooses Client or Pro. On later launches, the app restores tha
 ## Test plan
 
 - Provider tests for restore, role selection, and clear-session behavior.
-- Screen tests for both role actions, identity presentation, switching, and logout.
+- Screen tests for role selection, identity presentation, and logout.
 - Route-layout tests for loading, unauthenticated, and authenticated guard states.

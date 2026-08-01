@@ -13,7 +13,7 @@ The Profile tab clearly identifies the demo account, summarizes relevant activit
 - Show role, local display name, and stable local UUID (or a safely shortened display form).
 - Client summary: posted/open/claimed/done counts for owned jobs.
 - Pro summary: claimed/done counts for assigned jobs.
-- Reuse the S-001 switch-role/logout actions.
+- Reuse the S-001 logout action; role changes happen through the login selector.
 - Use `Linking.openSettings()` for an accessible **Open device settings** action.
 - If `openSettings()` rejects, show a non-blocking error message with no crash.
 

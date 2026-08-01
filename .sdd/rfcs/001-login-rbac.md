@@ -2,13 +2,13 @@
 
 **Status:** Proposed
 **Owner:** Reparo mobile
-**Scope:** Login, persisted identity, role switching, and role guards.
+**Scope:** Login, persisted identity, role-gated tabs, and route guards.
 
 ## Decision
 
 The launch route is a fake-login screen with two equally visible actions: **Continue as Client** and **Continue as Pro**. Selecting a role creates a local session containing a stable UUID identity. The session is persisted in the local SQLite database and restored before the authenticated tabs render.
 
-Profile exposes **Switch role** and **Log out**. Switching returns to the selector after clearing the current session; logging out does the same. Neither action clears the shared local job database, so a Client can post work, log out, and a Pro can later sign in on the same device to claim it. There are no credentials, remote tokens, or claims in this take-home slice.
+Profile exposes **Log out**. It returns to the selector without clearing the shared local job database, so a Client can post work, log out, and a Pro can later sign in on the same device to claim it. Client tabs are **My jobs** and **Profile**; Pro tabs are **Jobs**, **My jobs**, and **Profile**. There are no credentials, remote tokens, or claims in this take-home slice.
 
 ## Rationale
 
@@ -24,13 +24,13 @@ The PRD needs a shared app whose behavior changes by user type. A selector demon
 
 ## Non-goals
 
-- Real authentication, account creation, multi-user switching, token refresh, and server-side authorization.
+- Real authentication, account creation, in-session role switching, token refresh, and server-side authorization.
 
 ## Acceptance criteria
 
 - A first launch presents both role actions.
 - Relaunch restores the selected role.
-- Switching and logging out return to the selector and update the available routes.
+- Logging out returns to the selector; signing in with the selected role updates the available tabs.
 - Tests cover session restoration and role-gated action availability.
 
 ## Open questions for the spec

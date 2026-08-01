@@ -1,1 +1,1 @@
-export { jobsRepository } from './jobs-repository.native';
+export { jobsRepository } from "./jobs-repository.native";

@@ -1,2 +1,20 @@
-import { StyleSheet } from 'react-native-unistyles';
-export const styles = StyleSheet.create((theme) => ({ content: { gap: theme.spacing.md, padding: theme.spacing.xl }, label: { color: theme.colors.text, fontSize: theme.typography.body, fontWeight: '700' }, input: { backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderRadius: theme.radius.md, borderWidth: 1, color: theme.colors.text, fontSize: theme.typography.body, padding: theme.spacing.md }, description: { minHeight: 104, textAlignVertical: 'top' }, error: { color: theme.colors.danger, fontSize: theme.typography.body } }));
+import { StyleSheet } from "react-native-unistyles";
+export const styles = StyleSheet.create((theme) => ({
+  content: { gap: theme.spacing.md, padding: theme.spacing.xl },
+  label: {
+    color: theme.colors.text,
+    fontSize: theme.typography.body,
+    fontWeight: "700",
+  },
+  input: {
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    color: theme.colors.text,
+    fontSize: theme.typography.body,
+    padding: theme.spacing.md,
+  },
+  description: { minHeight: 104, textAlignVertical: "top" },
+  error: { color: theme.colors.danger, fontSize: theme.typography.body },
+}));

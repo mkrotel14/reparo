@@ -1,11 +1,16 @@
-import { getSessionDatabase, migrateSessionDatabase } from '@/features/session/data/session-database';
+import {
+  getSessionDatabase,
+  migrateSessionDatabase,
+} from "@/features/session/data/session-database";
 
 const jobsDatabaseVersion = 4;
 
 export async function getJobsDatabase() {
   await migrateSessionDatabase();
   const database = await getSessionDatabase();
-  const versionRow = await database.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
+  const versionRow = await database.getFirstAsync<{ user_version: number }>(
+    "PRAGMA user_version",
+  );
 
   const version = versionRow?.user_version ?? 0;
   if (version < 3) {
@@ -35,14 +40,21 @@ export async function getJobsDatabase() {
     });
   } else {
     await database.withExclusiveTransactionAsync(async (transaction) => {
-      const columns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(jobs)');
-      if (!columns.some((column) => column.name === 'location')) {
-        await transaction.execAsync("ALTER TABLE jobs ADD COLUMN location TEXT NOT NULL DEFAULT 'Your location'");
+      const columns = await transaction.getAllAsync<{ name: string }>(
+        "PRAGMA table_info(jobs)",
+      );
+      if (!columns.some((column) => column.name === "location")) {
+        await transaction.execAsync(
+          "ALTER TABLE jobs ADD COLUMN location TEXT NOT NULL DEFAULT 'Your location'",
+        );
       }
-      if (!columns.some((column) => column.name === 'budget')) {
-        await transaction.execAsync('ALTER TABLE jobs ADD COLUMN budget INTEGER NOT NULL DEFAULT 0');
+      if (!columns.some((column) => column.name === "budget")) {
+        await transaction.execAsync(
+          "ALTER TABLE jobs ADD COLUMN budget INTEGER NOT NULL DEFAULT 0",
+        );
       }
-      if (version < jobsDatabaseVersion) await transaction.execAsync('PRAGMA user_version = 4');
+      if (version < jobsDatabaseVersion)
+        await transaction.execAsync("PRAGMA user_version = 4");
     });
   }
 

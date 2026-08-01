@@ -1,7 +1,7 @@
-import { ActivityIndicator, Text, View } from 'react-native';
-import { StyleSheet } from 'react-native-unistyles';
+import { ActivityIndicator, Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 
-import { AppScreen } from '@/design-system/components';
+import { AppScreen } from "@/design-system/components";
 
 export function SessionLoadingScreen() {
   return (
@@ -15,7 +15,12 @@ export function SessionLoadingScreen() {
 }
 
 const styles = StyleSheet.create((theme) => ({
-  content: { alignItems: 'center', flex: 1, gap: theme.spacing.md, justifyContent: 'center' },
+  content: {
+    alignItems: "center",
+    flex: 1,
+    gap: theme.spacing.md,
+    justifyContent: "center",
+  },
   indicator: { color: theme.colors.primary },
   label: { color: theme.colors.textMuted, fontSize: theme.typography.body },
 }));

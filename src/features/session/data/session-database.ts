@@ -1,15 +1,17 @@
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from "expo-sqlite";
 
 let databasePromise: Promise<SQLite.SQLiteDatabase> | undefined;
 
 export function getSessionDatabase() {
-  databasePromise ??= SQLite.openDatabaseAsync('reparo.db');
+  databasePromise ??= SQLite.openDatabaseAsync("reparo.db");
   return databasePromise;
 }
 
 export async function migrateSessionDatabase() {
   const database = await getSessionDatabase();
-  const versionRow = await database.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
+  const versionRow = await database.getFirstAsync<{ user_version: number }>(
+    "PRAGMA user_version",
+  );
   const version = versionRow?.user_version ?? 0;
 
   if (version === 0) {
@@ -35,14 +37,22 @@ export async function migrateSessionDatabase() {
 
   if (version < 2) {
     await database.withExclusiveTransactionAsync(async (transaction) => {
-      const identityColumns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(local_identities)');
-      if (!identityColumns.some((column) => column.name === 'created_at')) {
-        await transaction.execAsync('ALTER TABLE local_identities ADD COLUMN created_at TEXT');
+      const identityColumns = await transaction.getAllAsync<{ name: string }>(
+        "PRAGMA table_info(local_identities)",
+      );
+      if (!identityColumns.some((column) => column.name === "created_at")) {
+        await transaction.execAsync(
+          "ALTER TABLE local_identities ADD COLUMN created_at TEXT",
+        );
       }
 
-      const sessionColumns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(active_session)');
-      if (!sessionColumns.some((column) => column.name === 'created_at')) {
-        await transaction.execAsync('ALTER TABLE active_session ADD COLUMN created_at TEXT');
+      const sessionColumns = await transaction.getAllAsync<{ name: string }>(
+        "PRAGMA table_info(active_session)",
+      );
+      if (!sessionColumns.some((column) => column.name === "created_at")) {
+        await transaction.execAsync(
+          "ALTER TABLE active_session ADD COLUMN created_at TEXT",
+        );
       }
 
       await transaction.execAsync(`

@@ -1,6 +1,10 @@
-import { DEMO_CLIENT_DUMMY_JSON_USER_ID, type Role, type Session } from '@/features/session/types';
+import {
+  DEMO_CLIENT_DUMMY_JSON_USER_ID,
+  type Role,
+  type Session,
+} from "@/features/session/types";
 
-const sessionKey = 'reparo.active-session';
+const sessionKey = "reparo.active-session";
 const identityKey = (role: Role) => `reparo.identity.${role}`;
 
 function createIdentity(role: Role): Session {
@@ -8,7 +12,9 @@ function createIdentity(role: Role): Session {
     createdAt: new Date().toISOString(),
     identityId: globalThis.crypto.randomUUID(),
     role,
-    ...(role === 'client' ? { dummyJsonUserId: DEMO_CLIENT_DUMMY_JSON_USER_ID } : {}),
+    ...(role === "client"
+      ? { dummyJsonUserId: DEMO_CLIENT_DUMMY_JSON_USER_ID }
+      : {}),
   };
 }
 
@@ -20,7 +26,10 @@ function read(key: string): Session | null {
 export const sessionRepository = {
   async getIdentity(role: Role) {
     const identity = read(identityKey(role)) ?? createIdentity(role);
-    globalThis.localStorage.setItem(identityKey(role), JSON.stringify(identity));
+    globalThis.localStorage.setItem(
+      identityKey(role),
+      JSON.stringify(identity),
+    );
     return identity;
   },
 
@@ -30,7 +39,10 @@ export const sessionRepository = {
 
   async selectRole(role: Role) {
     const identity = read(identityKey(role)) ?? createIdentity(role);
-    globalThis.localStorage.setItem(identityKey(role), JSON.stringify(identity));
+    globalThis.localStorage.setItem(
+      identityKey(role),
+      JSON.stringify(identity),
+    );
     const session = { ...identity, createdAt: new Date().toISOString() };
     globalThis.localStorage.setItem(sessionKey, JSON.stringify(session));
     return session;

@@ -1,23 +1,34 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from "@testing-library/react-native";
 
-import { LoginScreen } from './login-screen';
-import { useSession } from '@/features/session/session-context';
+import { LoginScreen } from "./login-screen";
+import { useSession } from "@/features/session/session-context";
 
-jest.mock('@/features/session/session-context', () => ({ useSession: jest.fn() }));
+jest.mock("@/features/session/session-context", () => ({
+  useSession: jest.fn(),
+}));
 
 const mockedUseSession = jest.mocked(useSession);
 
-describe('<LoginScreen />', () => {
-  it('offers both RBAC workspaces', async () => {
+describe("<LoginScreen />", () => {
+  it("offers both RBAC workspaces", async () => {
     const selectRole = jest.fn();
-    mockedUseSession.mockReturnValue({ session: null, selectRole, signOut: jest.fn(), status: 'unauthenticated' });
+    mockedUseSession.mockReturnValue({
+      session: null,
+      selectRole,
+      signOut: jest.fn(),
+      status: "unauthenticated",
+    });
 
     await render(<LoginScreen />);
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Continue as Client' }));
-    await fireEvent.press(screen.getByRole('button', { name: 'Continue as Pro' }));
+    await fireEvent.press(
+      screen.getByRole("button", { name: "Continue as Client" }),
+    );
+    await fireEvent.press(
+      screen.getByRole("button", { name: "Continue as Pro" }),
+    );
 
-    expect(selectRole).toHaveBeenNthCalledWith(1, 'client');
-    expect(selectRole).toHaveBeenNthCalledWith(2, 'pro');
+    expect(selectRole).toHaveBeenNthCalledWith(1, "client");
+    expect(selectRole).toHaveBeenNthCalledWith(2, "pro");
   });
 });

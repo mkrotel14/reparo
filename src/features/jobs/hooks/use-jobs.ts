@@ -1,12 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { jobsRepository } from '@/features/jobs/data/jobs-repository';
+import { seedJobsFromDummyJson } from '@/features/jobs/data/dummyjson-seed';
 import { useSession } from '@/features/session/session-context';
+import { sessionRepository } from '@/features/session/data/session-repository';
 
 const jobsKey = ['jobs'] as const;
 
 export function useJobs() {
-  return useQuery({ queryKey: jobsKey, queryFn: jobsRepository.list });
+  const { session } = useSession();
+  return useQuery({
+    queryKey: jobsKey,
+    queryFn: async () => {
+      if (session) {
+        const clientIdentity = await sessionRepository.getIdentity('client');
+        await seedJobsFromDummyJson({ clientId: clientIdentity.identityId });
+      }
+      return jobsRepository.list();
+    },
+  });
 }
 
 export function useCreateJob() {

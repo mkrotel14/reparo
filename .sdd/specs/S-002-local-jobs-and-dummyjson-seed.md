@@ -1,7 +1,7 @@
 # S-002 — Local repair jobs and DummyJSON seed
 
 **RFC:** [002 — Home and repair jobs](../rfcs/002-home-repair-jobs.md)
-**Status:** Ready
+**Status:** Implemented
 **Depends on:** S-001
 
 ## User outcome

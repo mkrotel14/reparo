@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import { Linking } from 'react-native';
 
 import { useProfileSummary } from '@/features/profile/hooks/use-profile-summary';
 import { useSession } from '@/features/session/session-context';
@@ -32,5 +33,20 @@ describe('<ProfileScreen />', () => {
 
     expect(screen.queryByRole('button', { name: /Switch role/i })).not.toBeOnTheScreen();
     expect(signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows recoverable feedback when device settings cannot open', async () => {
+    jest.spyOn(Linking, 'openSettings').mockRejectedValueOnce(new Error('Unavailable'));
+    mockedUseSession.mockReturnValue({ session: { createdAt: '2026-08-01T00:00:00.000Z', identityId: 'pro-uuid', role: 'pro' }, selectRole: jest.fn(), signOut: jest.fn(), status: 'authenticated' });
+    mockedUseProfileSummary.mockReturnValue({
+      identity: { displayName: 'Reparo Pro', email: 'pro@reparo.local', localId: 'pro-uuid', roleLabel: 'Pro' },
+      isLoading: false,
+      summary: { primaryMetric: { label: 'Jobs completed', value: 0 }, supportingMetrics: [{ label: 'Jobs claimed', value: 0 }, { label: 'Total assigned', value: 0 }] },
+    });
+
+    await render(<ProfileScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Device settings' }));
+
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Could not open device settings. Please try again.'));
   });
 });

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -14,16 +14,19 @@ const roles: Array<{ value: Role; label: string; description: string }> = [
 export function ProfileScreen() {
   const { session, selectRole, signOut } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSessionActionLocked = useRef(false);
   if (!session) return null;
 
   const otherRole: Role = session.role === 'client' ? 'pro' : 'client';
 
   async function runSessionAction(action: () => Promise<void>) {
-    if (isSubmitting) return;
+    if (isSessionActionLocked.current) return;
+    isSessionActionLocked.current = true;
     setIsSubmitting(true);
     try {
       await action();
     } finally {
+      isSessionActionLocked.current = false;
       setIsSubmitting(false);
     }
   }

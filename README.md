@@ -17,6 +17,8 @@ An Expo React Native test app for a two-role repair marketplace: clients post re
 
 Repair jobs are stored locally in SQLite and seeded once from DummyJSON's read-only todo endpoint. Login creates a stable local UUID identity for each role; logout removes only the active session, so identities and local jobs remain available when signing in as Client or Pro. Replace `src/features/jobs/data/jobs-repository.ts` with the real API implementation when the service is ready; UI screens should continue to call only the hooks in `src/features/jobs/hooks`.
 
+The Profile tab presents a friendly local identity, role-aware live job metrics, informational language and app-version rows, a device-settings handoff, and logout. Language is display-only and changing roles always happens by logging out and selecting a role again.
+
 ## Run
 
 Unistyles includes native code, so use a development build rather than Expo Go:

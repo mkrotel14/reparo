@@ -1,23 +1,17 @@
-import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react';
+import type { PropsWithChildren } from 'react';
 
-export type Role = 'client' | 'pro';
+import { useSession } from '@/features/session/session-context';
+import type { Role } from '@/features/session/types';
 
-type RoleContextValue = {
-  role: Role;
-  setRole: (role: Role) => void;
-};
-
-const RoleContext = createContext<RoleContextValue | null>(null);
+export type { Role } from '@/features/session/types';
 
 export function RoleProvider({ children }: PropsWithChildren) {
-  const [role, setRole] = useState<Role>('pro');
-  const value = useMemo(() => ({ role, setRole }), [role]);
-
-  return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;
+  return children;
 }
 
 export function useRole() {
-  const context = useContext(RoleContext);
-  if (!context) throw new Error('useRole must be used within RoleProvider');
-  return context;
+  const { session, selectRole } = useSession();
+  if (!session) throw new Error('useRole requires an authenticated session');
+
+  return { role: session.role, setRole: (role: Role) => void selectRole(role) };
 }

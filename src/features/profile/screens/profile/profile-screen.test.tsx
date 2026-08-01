@@ -1,29 +1,36 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { ProfileScreen } from './profile-screen';
+import { useProfileSummary } from '@/features/profile/hooks/use-profile-summary';
 import { useSession } from '@/features/session/session-context';
+import { ProfileScreen } from './profile-screen';
 
+jest.mock('@/features/profile/hooks/use-profile-summary', () => ({ useProfileSummary: jest.fn() }));
 jest.mock('@/features/session/session-context', () => ({ useSession: jest.fn() }));
 
+const mockedUseProfileSummary = jest.mocked(useProfileSummary);
 const mockedUseSession = jest.mocked(useSession);
 
 describe('<ProfileScreen />', () => {
-  it('shows the active identity and exposes logout', async () => {
+  it('shows the account home and exposes logout without a role switch', async () => {
     const signOut = jest.fn().mockResolvedValue(undefined);
-    mockedUseSession.mockReturnValue({
-      session: { createdAt: '2026-08-01T00:00:00.000Z', identityId: 'client-uuid', role: 'client', dummyJsonUserId: 1 },
-      selectRole: jest.fn(),
-      signOut,
-      status: 'authenticated',
+    mockedUseSession.mockReturnValue({ session: { createdAt: '2026-08-01T00:00:00.000Z', identityId: 'client-uuid', role: 'client' }, selectRole: jest.fn(), signOut, status: 'authenticated' });
+    mockedUseProfileSummary.mockReturnValue({
+      identity: { displayName: 'Reparo Client', email: 'client@reparo.local', localId: 'client-uuid', roleLabel: 'Client' },
+      isLoading: false,
+      summary: { primaryMetric: { label: 'Requests completed', value: 3 }, supportingMetrics: [{ label: 'Open requests', value: 1 }, { label: 'In progress', value: 2 }] },
     });
 
     await render(<ProfileScreen />);
 
-    expect(screen.getByText('client-uuid')).toBeOnTheScreen();
-    expect(screen.getByText('Demo API user #1')).toBeOnTheScreen();
+    expect(screen.getByText('Reparo Client')).toBeOnTheScreen();
+    expect(screen.getByText('client@reparo.local')).toBeOnTheScreen();
+    expect(screen.getByText('Requests completed')).toBeOnTheScreen();
+    expect(screen.getByText('Language')).toBeOnTheScreen();
+    expect(screen.getByText('English')).toBeOnTheScreen();
+    expect(screen.getByText('App version')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Log out' }));
 
-    expect(screen.queryByRole('button', { name: /Switch to/ })).not.toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: /Switch role/i })).not.toBeOnTheScreen();
     expect(signOut).toHaveBeenCalledTimes(1);
   });
 });

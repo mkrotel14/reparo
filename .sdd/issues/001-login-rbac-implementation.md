@@ -12,27 +12,27 @@ Implement RFC 001: a persisted local Client/Pro session that gates navigation an
 
 ## Phases
 
-- [ ] **Phase 1 — Session domain and persistence**
+- [x] **Phase 1 — Session domain and persistence**
   - Define `Session`, `Role`, stable UUID identities, and repository contracts.
   - Add SQLite migration/storage for the active session.
   - Add restore, select-role, and clear-session operations.
 
-- [ ] **Phase 2 — Login and route protection**
+- [x] **Phase 2 — Login and route protection**
   - Build the role-selection screen with two accessible actions.
   - Replace the temporary role context with a restoring session provider.
   - Gate authenticated routes and render a startup/loading state while restoring.
 
-- [ ] **Phase 3 — Profile account actions**
+- [x] **Phase 3 — Profile account actions**
   - Display the active local identity and role.
   - Implement Switch role and Log out.
   - Verify these clear only session data, preserving local jobs for the next role.
 
-- [ ] **Phase 4 — Tests**
+- [x] **Phase 4 — Tests**
   - Unit-test session repository and hook behavior.
   - Screen-test initial login, restored session, role selection, switching, and logout.
   - Cover the no-session/loading/authenticated route states.
 
-- [ ] **Phase 5 — Quality and handoff**
+- [x] **Phase 5 — Quality and handoff**
   - Run TypeScript, tests, Expo Doctor, and a platform build/export check.
   - Update README and SDD references with the implemented behavior and any assumptions.
 

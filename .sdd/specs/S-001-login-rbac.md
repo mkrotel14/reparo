@@ -1,7 +1,7 @@
 # S-001 — Persisted local login and RBAC
 
 **RFC:** [001 — Login and RBAC](../rfcs/001-login-rbac.md)
-**Status:** Ready
+**Status:** Implemented
 
 ## User outcome
 
@@ -9,7 +9,7 @@ A first-time user chooses Client or Pro. On later launches, the app restores tha
 
 ## Data and state
 
-- Persist one `session` record: `id` (UUID), `role`, `dummyJsonUserId` for Client seed mapping, and `createdAt`.
+- Persist one `session` record: `identityId` (UUID), `role`, `dummyJsonUserId` for Client seed mapping, and `createdAt`.
 - `restoreSession()` resolves before the root navigation chooses public or authenticated routes.
 - `selectRole(role)` creates/reuses a stable local role identity; `clearSession()` removes only the session record.
 - The session repository is the only storage access point; screens consume `useSession`.
@@ -29,6 +29,6 @@ A first-time user chooses Client or Pro. On later launches, the app restores tha
 
 ## Test plan
 
-- Repository tests for create, restore, and clear.
-- Hook tests for loading/unauthenticated/authenticated states.
-- Screen tests for both role actions and route gating.
+- Provider tests for restore, role selection, and clear-session behavior.
+- Screen tests for both role actions, identity presentation, switching, and logout.
+- Route-layout tests for loading, unauthenticated, and authenticated guard states.

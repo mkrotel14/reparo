@@ -8,6 +8,13 @@ import { useClaimJob, useJobs } from '@/features/jobs/hooks/use-jobs';
 jest.mock('@/features/jobs/data/jobs-repository', () => ({
   jobsRepository: { claim: jest.fn(), list: jest.fn() },
 }));
+jest.mock('@/features/jobs/data/dummyjson-seed', () => ({ seedJobsFromDummyJson: jest.fn().mockResolvedValue({ didSeed: false, importedCount: 0 }) }));
+jest.mock('@/features/session/session-context', () => ({
+  useSession: () => ({ session: { identityId: 'pro-1', role: 'pro' } }),
+}));
+jest.mock('@/features/session/data/session-repository', () => ({
+  sessionRepository: { getIdentity: jest.fn().mockResolvedValue({ identityId: 'client-1', role: 'client' }) },
+}));
 
 const mockedRepository = jest.mocked(jobsRepository);
 
@@ -32,7 +39,7 @@ describe('jobs hooks', () => {
   it('claims a job for the active pro', async () => {
     const { result } = await renderHook(() => useClaimJob(), { wrapper: createWrapper() });
 
-    await act(() => result.current.mutateAsync({ jobId: 'job-1', proId: 'pro-1' }));
+    await act(() => result.current.mutateAsync('job-1'));
     expect(mockedRepository.claim).toHaveBeenCalledWith('job-1', 'pro-1');
   });
 });

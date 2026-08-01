@@ -43,6 +43,11 @@ async function getOrCreateIdentity(role: Role): Promise<Session> {
 }
 
 export const sessionRepository = {
+  async getIdentity(role: Role): Promise<Session> {
+    await migrateSessionDatabase();
+    return getOrCreateIdentity(role);
+  },
+
   async restore(): Promise<Session | null> {
     await migrateSessionDatabase();
     const database = await getSessionDatabase();

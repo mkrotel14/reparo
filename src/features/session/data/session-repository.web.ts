@@ -18,6 +18,12 @@ function read(key: string): Session | null {
 }
 
 export const sessionRepository = {
+  async getIdentity(role: Role) {
+    const identity = read(identityKey(role)) ?? createIdentity(role);
+    globalThis.localStorage.setItem(identityKey(role), JSON.stringify(identity));
+    return identity;
+  },
+
   async restore() {
     return read(sessionKey);
   },

@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
 import { AppButton } from '@/design-system/components';
@@ -8,11 +8,12 @@ type JobCardProps = {
   actionLabel?: string;
   job: RepairJob;
   onAction?: () => void;
+  onPress?: () => void;
 };
 
-export function JobCard({ actionLabel, job, onAction }: JobCardProps) {
+export function JobCard({ actionLabel, job, onAction, onPress }: JobCardProps) {
   return (
-    <View style={styles.card}>
+    <Pressable accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={onPress ? `View ${job.title}` : undefined} onPress={onPress} style={styles.card}>
       <View style={styles.heading}>
         <Text style={styles.title}>{job.title}</Text>
         <Text style={[styles.status, styles.statusColor(job.status)]}>{job.status}</Text>
@@ -20,7 +21,7 @@ export function JobCard({ actionLabel, job, onAction }: JobCardProps) {
       <Text style={styles.meta}>{job.location} · R${job.budget}</Text>
       {job.description ? <Text style={styles.description}>{job.description}</Text> : null}
       {actionLabel && onAction ? <AppButton accessibilityLabel={`${actionLabel} ${job.title}`} onPress={onAction}>{actionLabel}</AppButton> : null}
-    </View>
+    </Pressable>
   );
 }
 

@@ -23,6 +23,10 @@ Repair jobs are stored locally in SQLite and seeded once from DummyJSON's read-o
 
 The Profile tab presents a friendly local identity, role-aware live job metrics, informational language and app-version rows, a device-settings handoff, and logout. Language is display-only and changing roles always happens by logging out and selecting a role again.
 
+## Demo
+
+Watch the [iPhone simulator recording](demo/reparo-ios-demo.mov) for a walkthrough of the current Reparo experience.
+
 ## Run
 
 Unistyles includes native code, so use a development build rather than Expo Go:

@@ -1,11 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { jobsRepository } from '@/features/jobs/data/jobs-repository';
-import { seedJobsFromDummyJson } from '@/features/jobs/data/dummyjson-seed';
-import { useSession } from '@/features/session/session-context';
-import { sessionRepository } from '@/features/session/data/session-repository';
+import { jobsRepository } from "@/features/jobs/data/jobs-repository";
+import { seedJobsFromDummyJson } from "@/features/jobs/data/dummyjson-seed";
+import { useSession } from "@/features/session/session-context";
+import { sessionRepository } from "@/features/session/data/session-repository";
 
-const jobsKey = ['jobs'] as const;
+const jobsKey = ["jobs"] as const;
 
 export function useJobs() {
   const { session } = useSession();
@@ -13,8 +13,10 @@ export function useJobs() {
     queryKey: jobsKey,
     queryFn: async () => {
       if (session) {
-        const clientIdentity = await sessionRepository.getIdentity('client');
-        await seedJobsFromDummyJson({ clientId: clientIdentity.identityId }).catch(() => undefined);
+        const clientIdentity = await sessionRepository.getIdentity("client");
+        await seedJobsFromDummyJson({
+          clientId: clientIdentity.identityId,
+        }).catch(() => undefined);
       }
       return jobsRepository.list();
     },
@@ -25,9 +27,20 @@ export function useCreateJob() {
   const queryClient = useQueryClient();
   const { session } = useSession();
   return useMutation({
-    mutationFn: ({ description, title }: { description: string; title: string }) => {
-      if (!session || session.role !== 'client') throw new Error('Only Clients can create jobs');
-      return jobsRepository.create({ clientId: session.identityId, description, title });
+    mutationFn: ({
+      description,
+      title,
+    }: {
+      description: string;
+      title: string;
+    }) => {
+      if (!session || session.role !== "client")
+        throw new Error("Only Clients can create jobs");
+      return jobsRepository.create({
+        clientId: session.identityId,
+        description,
+        title,
+      });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),
   });
@@ -38,7 +51,8 @@ export function useClaimJob() {
   const { session } = useSession();
   return useMutation({
     mutationFn: (jobId: string) => {
-      if (!session || session.role !== 'pro') throw new Error('Only Pros can claim jobs');
+      if (!session || session.role !== "pro")
+        throw new Error("Only Pros can claim jobs");
       return jobsRepository.claim(jobId, session.identityId);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),
@@ -50,7 +64,8 @@ export function useCompleteJob() {
   const { session } = useSession();
   return useMutation({
     mutationFn: (jobId: string) => {
-      if (!session || session.role !== 'pro') throw new Error('Only Pros can complete jobs');
+      if (!session || session.role !== "pro")
+        throw new Error("Only Pros can complete jobs");
       return jobsRepository.complete(jobId, session.identityId);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),

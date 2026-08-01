@@ -15,11 +15,11 @@ On first database initialization, the seed source is `GET https://dummyjson.com/
 
 ## State model
 
-| Domain status | Eligible action | Result |
-| --- | --- | --- |
-| `open` | Active Pro claims | `claimed`, assigned to that Pro |
-| `claimed` | Assigned Pro completes | `done` |
-| `done` | None | terminal |
+| Domain status | Eligible action        | Result                          |
+| ------------- | ---------------------- | ------------------------------- |
+| `open`        | Active Pro claims      | `claimed`, assigned to that Pro |
+| `claimed`     | Assigned Pro completes | `done`                          |
+| `done`        | None                   | terminal                        |
 
 Initial DummyJSON rows should be deterministic: `completed: false` becomes `open`; `completed: true` becomes `done`. No remote todo is initially claimed.
 

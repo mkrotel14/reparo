@@ -1,4 +1,4 @@
-export type JobStatus = 'open' | 'claimed' | 'completed';
+export type JobStatus = "open" | "claimed" | "completed";
 
 export type RepairJob = {
   id: string;

@@ -1,2 +1,25 @@
-import { StyleSheet } from 'react-native-unistyles';
-export const styles = StyleSheet.create((theme) => ({ card: { backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderRadius: theme.radius.lg, borderWidth: 1, gap: theme.spacing.md, padding: theme.spacing.lg }, heading: { alignItems: 'flex-start', flexDirection: 'row', gap: theme.spacing.sm, justifyContent: 'space-between' }, title: { color: theme.colors.text, flex: 1, fontSize: theme.typography.heading, fontWeight: '800' }, meta: { color: theme.colors.textMuted, fontSize: theme.typography.body }, description: { color: theme.colors.text, fontSize: theme.typography.body } }));
+import { StyleSheet } from "react-native-unistyles";
+export const styles = StyleSheet.create((theme) => ({
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    gap: theme.spacing.md,
+    padding: theme.spacing.lg,
+  },
+  heading: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    gap: theme.spacing.sm,
+    justifyContent: "space-between",
+  },
+  title: {
+    color: theme.colors.text,
+    flex: 1,
+    fontSize: theme.typography.heading,
+    fontWeight: "800",
+  },
+  meta: { color: theme.colors.textMuted, fontSize: theme.typography.body },
+  description: { color: theme.colors.text, fontSize: theme.typography.body },
+}));

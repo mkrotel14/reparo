@@ -1,17 +1,17 @@
 const palette = {
-  ink: '#18201D',
-  moss: '#215B45',
-  fern: '#397B5C',
-  mint: '#DCEFE5',
-  cream: '#FBF9F4',
-  sand: '#EEE9DE',
-  slate: '#66706B',
-  white: '#FFFFFF',
-  night: '#111815',
-  charcoal: '#1B2621',
-  fog: '#D7E2DB',
-  amber: '#F2A73B',
-  red: '#C54A42',
+  ink: "#18201D",
+  moss: "#215B45",
+  fern: "#397B5C",
+  mint: "#DCEFE5",
+  cream: "#FBF9F4",
+  sand: "#EEE9DE",
+  slate: "#66706B",
+  white: "#FFFFFF",
+  night: "#111815",
+  charcoal: "#1B2621",
+  fog: "#D7E2DB",
+  amber: "#F2A73B",
+  red: "#C54A42",
 } as const;
 
 const spacing = {
@@ -20,8 +20,8 @@ const spacing = {
   md: 12,
   lg: 16,
   xl: 24,
-  '2xl': 32,
-  '3xl': 48,
+  "2xl": 32,
+  "3xl": 48,
 } as const;
 
 const radius = {
@@ -39,7 +39,21 @@ const typography = {
 } as const;
 
 type AppTheme = {
-  colors: Record<'background' | 'surface' | 'surfaceMuted' | 'text' | 'textMuted' | 'primary' | 'primaryPressed' | 'onPrimary' | 'border' | 'success' | 'warning' | 'danger', string>;
+  colors: Record<
+    | "background"
+    | "surface"
+    | "surfaceMuted"
+    | "text"
+    | "textMuted"
+    | "primary"
+    | "primaryPressed"
+    | "onPrimary"
+    | "border"
+    | "success"
+    | "warning"
+    | "danger",
+    string
+  >;
   spacing: typeof spacing;
   radius: typeof radius;
   typography: typeof typography;
@@ -55,7 +69,7 @@ export const lightTheme: AppTheme = {
     primary: palette.moss,
     primaryPressed: palette.fern,
     onPrimary: palette.white,
-    border: '#D9DED8',
+    border: "#D9DED8",
     success: palette.fern,
     warning: palette.amber,
     danger: palette.red,
@@ -70,15 +84,15 @@ export const darkTheme: AppTheme = {
   colors: {
     background: palette.night,
     surface: palette.charcoal,
-    surfaceMuted: '#26322C',
-    text: '#F4F7F3',
-    textMuted: '#B5C1BA',
-    primary: '#7FC7A2',
-    primaryPressed: '#A2DCBC',
+    surfaceMuted: "#26322C",
+    text: "#F4F7F3",
+    textMuted: "#B5C1BA",
+    primary: "#7FC7A2",
+    primaryPressed: "#A2DCBC",
     onPrimary: palette.night,
-    border: '#34433B',
-    success: '#8BD4AA',
-    warning: '#F5BE65',
-    danger: '#EB837C',
+    border: "#34433B",
+    success: "#8BD4AA",
+    warning: "#F5BE65",
+    danger: "#EB837C",
   },
 };

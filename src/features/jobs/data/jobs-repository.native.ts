@@ -1,7 +1,7 @@
-import * as Crypto from 'expo-crypto';
+import * as Crypto from "expo-crypto";
 
-import { getJobsDatabase } from '@/features/jobs/data/jobs-database';
-import type { RepairJob } from '@/features/jobs/types';
+import { getJobsDatabase } from "@/features/jobs/data/jobs-database";
+import type { RepairJob } from "@/features/jobs/types";
 
 type JobRow = {
   budget: number;
@@ -11,7 +11,7 @@ type JobRow = {
   id: string;
   location: string;
   pro_id: string | null;
-  status: RepairJob['status'];
+  status: RepairJob["status"];
   title: string;
   updated_at: string;
 };
@@ -34,18 +34,45 @@ function toJob(row: JobRow): RepairJob {
 export const jobsRepository = {
   async list(): Promise<RepairJob[]> {
     const database = await getJobsDatabase();
-    const rows = await database.getAllAsync<JobRow>('SELECT * FROM jobs ORDER BY created_at DESC');
+    const rows = await database.getAllAsync<JobRow>(
+      "SELECT * FROM jobs ORDER BY created_at DESC",
+    );
     return rows.map(toJob);
   },
 
-  async create({ clientId, description = '', location = 'Your location', budget = 150, title }: Pick<RepairJob, 'clientId' | 'title'> & Partial<Pick<RepairJob, 'description' | 'location' | 'budget'>>) {
+  async create({
+    clientId,
+    description = "",
+    location = "Your location",
+    budget = 150,
+    title,
+  }: Pick<RepairJob, "clientId" | "title"> &
+    Partial<Pick<RepairJob, "description" | "location" | "budget">>) {
     const database = await getJobsDatabase();
     const createdAt = new Date().toISOString();
-    const job: RepairJob = { id: Crypto.randomUUID(), clientId, title, description, location, budget, status: 'open', createdAt, updatedAt: createdAt };
+    const job: RepairJob = {
+      id: Crypto.randomUUID(),
+      clientId,
+      title,
+      description,
+      location,
+      budget,
+      status: "open",
+      createdAt,
+      updatedAt: createdAt,
+    };
     await database.runAsync(
       `INSERT INTO jobs (id, client_id, title, description, location, budget, status, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      job.id, job.clientId, job.title, job.description ?? '', job.location, job.budget, job.status, createdAt, createdAt,
+      job.id,
+      job.clientId,
+      job.title,
+      job.description ?? "",
+      job.location,
+      job.budget,
+      job.status,
+      createdAt,
+      createdAt,
     );
     return job;
   },
@@ -54,17 +81,22 @@ export const jobsRepository = {
     const database = await getJobsDatabase();
     const result = await database.runAsync(
       "UPDATE jobs SET status = 'claimed', pro_id = ?, updated_at = ? WHERE id = ? AND status = 'open'",
-      proId, new Date().toISOString(), jobId,
+      proId,
+      new Date().toISOString(),
+      jobId,
     );
-    if (result.changes !== 1) throw new Error('Only open jobs can be claimed');
+    if (result.changes !== 1) throw new Error("Only open jobs can be claimed");
   },
 
   async complete(jobId: string, proId: string) {
     const database = await getJobsDatabase();
     const result = await database.runAsync(
       "UPDATE jobs SET status = 'completed', updated_at = ? WHERE id = ? AND status = 'claimed' AND pro_id = ?",
-      new Date().toISOString(), jobId, proId,
+      new Date().toISOString(),
+      jobId,
+      proId,
     );
-    if (result.changes !== 1) throw new Error('Only the assigned Pro can complete this job');
+    if (result.changes !== 1)
+      throw new Error("Only the assigned Pro can complete this job");
   },
 };

@@ -1,1 +1,1 @@
-export { sessionRepository } from './session-repository.native';
+export { sessionRepository } from "./session-repository.native";

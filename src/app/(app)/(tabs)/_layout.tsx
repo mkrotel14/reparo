@@ -1,10 +1,10 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { NativeTabs } from "expo-router/unstable-native-tabs";
 
-import { useSession } from '@/features/session/session-context';
+import { useSession } from "@/features/session/session-context";
 
 export default function TabLayout() {
   const { session } = useSession();
-  const isPro = session?.role === 'pro';
+  const isPro = session?.role === "pro";
 
   return (
     <NativeTabs>

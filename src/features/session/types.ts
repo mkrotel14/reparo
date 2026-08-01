@@ -1,4 +1,4 @@
-export type Role = 'client' | 'pro';
+export type Role = "client" | "pro";
 
 export type Session = {
   createdAt: string;

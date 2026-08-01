@@ -1,1 +1,1 @@
-export { seedJobsFromDummyJson } from './dummyjson-seed.native';
+export { seedJobsFromDummyJson } from "./dummyjson-seed.native";

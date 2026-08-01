@@ -13,9 +13,9 @@ export function useCreateJob() {
   const queryClient = useQueryClient();
   const { session } = useSession();
   return useMutation({
-    mutationFn: (title: string) => {
+    mutationFn: ({ description, title }: { description: string; title: string }) => {
       if (!session || session.role !== 'client') throw new Error('Only Clients can create jobs');
-      return jobsRepository.create({ clientId: session.identityId, title });
+      return jobsRepository.create({ clientId: session.identityId, description, title });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),
   });

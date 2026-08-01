@@ -18,7 +18,7 @@ Implement S-003: a Profile tab that feels like an account home, reflects the act
   - Implement accessible `Linking.openSettings()` action.
   - Add user-visible failure feedback if the settings app cannot open.
 
-- [ ] **Phase 4 — Tests and handoff**
+- [x] **Phase 4 — Tests and handoff**
   - Test both role variants, the identity header, live summaries, settings rows, logout, and settings success/failure.
   - Verify Language and app version are informational only, no Switch role action appears, and update documentation.
 

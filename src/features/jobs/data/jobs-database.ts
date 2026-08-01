@@ -1,6 +1,6 @@
 import { getSessionDatabase, migrateSessionDatabase } from '@/features/session/data/session-database';
 
-const jobsDatabaseVersion = 3;
+const jobsDatabaseVersion = 4;
 
 export async function getJobsDatabase() {
   await migrateSessionDatabase();
@@ -17,6 +17,8 @@ export async function getJobsDatabase() {
           pro_id TEXT,
           title TEXT NOT NULL,
           description TEXT NOT NULL DEFAULT '',
+          location TEXT NOT NULL DEFAULT 'Your location',
+          budget INTEGER NOT NULL DEFAULT 0,
           status TEXT NOT NULL CHECK (status IN ('open', 'claimed', 'completed')),
           created_at TEXT NOT NULL,
           updated_at TEXT NOT NULL
@@ -27,8 +29,19 @@ export async function getJobsDatabase() {
           key TEXT PRIMARY KEY NOT NULL,
           value TEXT NOT NULL
         );
-        PRAGMA user_version = 3;
+        PRAGMA user_version = 4;
       `);
+    });
+  } else if ((versionRow?.user_version ?? 0) < jobsDatabaseVersion) {
+    await database.withExclusiveTransactionAsync(async (transaction) => {
+      const columns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(jobs)');
+      if (!columns.some((column) => column.name === 'location')) {
+        await transaction.execAsync("ALTER TABLE jobs ADD COLUMN location TEXT NOT NULL DEFAULT 'Your location'");
+      }
+      if (!columns.some((column) => column.name === 'budget')) {
+        await transaction.execAsync('ALTER TABLE jobs ADD COLUMN budget INTEGER NOT NULL DEFAULT 0');
+      }
+      await transaction.execAsync('PRAGMA user_version = 4');
     });
   }
 

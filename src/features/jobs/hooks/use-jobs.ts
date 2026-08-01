@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { jobsRepository } from '@/features/jobs/data/jobs-repository';
+import { useSession } from '@/features/session/session-context';
 
 const jobsKey = ['jobs'] as const;
 
@@ -10,8 +11,12 @@ export function useJobs() {
 
 export function useCreateJob() {
   const queryClient = useQueryClient();
+  const { session } = useSession();
   return useMutation({
-    mutationFn: jobsRepository.create,
+    mutationFn: (title: string) => {
+      if (!session || session.role !== 'client') throw new Error('Only Clients can create jobs');
+      return jobsRepository.create({ clientId: session.identityId, title });
+    },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),
   });
 }
@@ -26,8 +31,12 @@ export function useClaimJob() {
 
 export function useCompleteJob() {
   const queryClient = useQueryClient();
+  const { session } = useSession();
   return useMutation({
-    mutationFn: jobsRepository.complete,
+    mutationFn: (jobId: string) => {
+      if (!session || session.role !== 'pro') throw new Error('Only Pros can complete jobs');
+      return jobsRepository.complete(jobId, session.identityId);
+    },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),
   });
 }

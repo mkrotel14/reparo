@@ -29,6 +29,6 @@ describe('jobs database migration', () => {
     expect(mockedMigrate).toHaveBeenCalledTimes(1);
     expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('CREATE TABLE IF NOT EXISTS jobs'));
     expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('CREATE TABLE IF NOT EXISTS app_metadata'));
-    expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('PRAGMA user_version = 3'));
+    expect(transaction.execAsync).toHaveBeenCalledWith(expect.stringContaining('PRAGMA user_version = 4'));
   });
 });

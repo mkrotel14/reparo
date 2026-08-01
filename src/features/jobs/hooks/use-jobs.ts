@@ -14,7 +14,7 @@ export function useJobs() {
     queryFn: async () => {
       if (session) {
         const clientIdentity = await sessionRepository.getIdentity('client');
-        await seedJobsFromDummyJson({ clientId: clientIdentity.identityId });
+        await seedJobsFromDummyJson({ clientId: clientIdentity.identityId }).catch(() => undefined);
       }
       return jobsRepository.list();
     },

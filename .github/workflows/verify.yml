@@ -3,8 +3,6 @@ name: Verify
 on:
   pull_request:
     branches: [main, feat/**]
-  push:
-    branches: [main, feat/**, phase/**]
 
 permissions:
   contents: read

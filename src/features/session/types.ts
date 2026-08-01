@@ -1,6 +1,7 @@
 export type Role = 'client' | 'pro';
 
 export type Session = {
+  createdAt: string;
   identityId: string;
   role: Role;
   dummyJsonUserId?: number;

@@ -18,6 +18,7 @@ export function JobCard({ actionLabel, job, onAction }: JobCardProps) {
         <Text style={[styles.status, styles.statusColor(job.status)]}>{job.status}</Text>
       </View>
       <Text style={styles.meta}>{job.location} · R${job.budget}</Text>
+      {job.description ? <Text style={styles.description}>{job.description}</Text> : null}
       {actionLabel && onAction ? <AppButton accessibilityLabel={`${actionLabel} ${job.title}`} onPress={onAction}>{actionLabel}</AppButton> : null}
     </View>
   );
@@ -28,6 +29,7 @@ const styles = StyleSheet.create((theme) => ({
   heading: { alignItems: 'flex-start', flexDirection: 'row', gap: theme.spacing.sm, justifyContent: 'space-between' },
   title: { color: theme.colors.text, flex: 1, fontSize: theme.typography.heading, fontWeight: '800' },
   meta: { color: theme.colors.textMuted, fontSize: theme.typography.body },
+  description: { color: theme.colors.text, fontSize: theme.typography.body },
   status: { borderRadius: theme.radius.pill, fontSize: theme.typography.caption, fontWeight: '700', overflow: 'hidden', paddingHorizontal: theme.spacing.sm, paddingVertical: theme.spacing.xs, textTransform: 'capitalize' },
   statusColor: (status) => ({
     backgroundColor: status === 'completed' ? theme.colors.success : status === 'claimed' ? theme.colors.warning : theme.colors.surfaceMuted,

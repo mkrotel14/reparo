@@ -8,7 +8,7 @@ const database = {
   withExclusiveTransactionAsync: jest.fn(),
 };
 
-const transaction = { runAsync: jest.fn() };
+const transaction = { getFirstAsync: jest.fn(), runAsync: jest.fn() };
 const mockedGetJobsDatabase = jest.mocked(getJobsDatabase);
 
 describe('DummyJSON jobs seed', () => {
@@ -16,6 +16,7 @@ describe('DummyJSON jobs seed', () => {
     jest.resetAllMocks();
     mockedGetJobsDatabase.mockResolvedValue(database as never);
     database.withExclusiveTransactionAsync.mockImplementation(async (callback) => callback(transaction));
+    transaction.getFirstAsync.mockResolvedValue(null);
     transaction.runAsync.mockResolvedValue({ changes: 1, lastInsertRowId: 1 });
   });
 
@@ -49,5 +50,25 @@ describe('DummyJSON jobs seed', () => {
 
     await expect(seedJobsFromDummyJson({ clientId: 'client-id', fetchImpl })).rejects.toThrow('DummyJSON seed request failed (503)');
     expect(transaction.runAsync).not.toHaveBeenCalled();
+  });
+
+  it('handles concurrent first-boot callers without failing the second caller', async () => {
+    database.getFirstAsync.mockResolvedValue(null);
+    transaction.getFirstAsync
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ value: '2026-08-01T00:00:00.000Z' });
+    const fetchImpl = jest.fn().mockResolvedValue({
+      json: async () => ({ todos: [{ completed: false, id: 1, todo: 'Fix sink', userId: 1 }] }),
+      ok: true,
+      status: 200,
+    });
+
+    await expect(Promise.all([
+      seedJobsFromDummyJson({ clientId: 'client-id', fetchImpl }),
+      seedJobsFromDummyJson({ clientId: 'client-id', fetchImpl }),
+    ])).resolves.toEqual([
+      { didSeed: true, importedCount: 1 },
+      { didSeed: false, importedCount: 0 },
+    ]);
   });
 });

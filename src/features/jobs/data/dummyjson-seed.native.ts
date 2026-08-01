@@ -34,7 +34,14 @@ export async function seedJobsFromDummyJson({ clientId, fetchImpl = fetch }: See
   const todos = payload.todos.filter((todo) => todo.userId === 1);
   const now = new Date().toISOString();
 
+  let result = { didSeed: false, importedCount: 0 };
   await database.withExclusiveTransactionAsync(async (transaction) => {
+    const completedSeed = await transaction.getFirstAsync<{ value: string }>(
+      'SELECT value FROM app_metadata WHERE key = ?',
+      seedMetadataKey,
+    );
+    if (completedSeed) return;
+
     for (const todo of todos) {
       await transaction.runAsync(
         `INSERT OR IGNORE INTO jobs
@@ -55,7 +62,9 @@ export async function seedJobsFromDummyJson({ clientId, fetchImpl = fetch }: See
       seedMetadataKey,
       now,
     );
+
+    result = { didSeed: true, importedCount: todos.length };
   });
 
-  return { didSeed: true, importedCount: todos.length };
+  return result;
 }

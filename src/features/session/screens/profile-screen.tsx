@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -12,9 +13,20 @@ const roles: Array<{ value: Role; label: string; description: string }> = [
 
 export function ProfileScreen() {
   const { session, selectRole, signOut } = useSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   if (!session) return null;
 
   const otherRole: Role = session.role === 'client' ? 'pro' : 'client';
+
+  async function runSessionAction(action: () => Promise<void>) {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await action();
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <AppScreen>
@@ -37,10 +49,10 @@ export function ProfileScreen() {
           </View>
         </View>
         <View style={styles.actions}>
-          <AppButton accessibilityLabel={`Switch to ${otherRole === 'pro' ? 'Pro' : 'Client'}`} tone="secondary" onPress={() => selectRole(otherRole)}>
+          <AppButton accessibilityLabel={`Switch to ${otherRole === 'pro' ? 'Pro' : 'Client'}`} disabled={isSubmitting} tone="secondary" onPress={() => runSessionAction(() => selectRole(otherRole))}>
             Switch to {otherRole === 'pro' ? 'Pro' : 'Client'}
           </AppButton>
-          <AppButton accessibilityLabel="Log out" tone="secondary" onPress={() => signOut()}>Log out</AppButton>
+          <AppButton accessibilityLabel="Log out" disabled={isSubmitting} tone="secondary" onPress={() => runSessionAction(signOut)}>Log out</AppButton>
         </View>
       </View>
     </AppScreen>

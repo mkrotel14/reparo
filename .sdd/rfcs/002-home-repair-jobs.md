@@ -27,7 +27,7 @@ Initial DummyJSON rows should be deterministic: `completed: false` becomes `open
 
 SQLite is the source of truth. The initial seed is imported exactly once and stored in a local `jobs` table. A small `app_metadata` table records the seed version, so a future development-only reset can deliberately clear and re-import fixtures without overwriting normal use.
 
-Logout and role switching clear only session data. They never clear jobs, assignments, or seed metadata; the local database deliberately simulates the shared backend that would coordinate the Client and Pro in production.
+Logout clears only session data. Jobs, assignments, and seed metadata remain intact so the other role can sign in on the same device; the local database deliberately simulates the shared backend that would coordinate the Client and Pro in production.
 
 Create, claim, and complete run as local database transactions. TanStack Query reads through the repository and updates/invalidate its cache after each transaction, so every screen reflects the change without a restart. DummyJSON `POST` and `PUT` endpoints are deliberately not called: their non-persistent responses would make the app less consistent.
 

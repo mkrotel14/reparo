@@ -28,7 +28,7 @@ Implement S-002: a SQLite-backed repair-job workflow seeded once from DummyJSON,
 
 ## Acceptance criteria
 
-- Jobs persist locally across app restarts, logout, and role switching.
+- Jobs persist locally across app restarts, logout, and subsequent sign-ins with either role.
 - Client-created jobs are available for the Pro to claim.
 - The app never relies on non-persistent DummyJSON mutation responses.
 - Loading, empty, error, and pending states are covered.

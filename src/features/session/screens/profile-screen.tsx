@@ -1,50 +1,28 @@
-import { useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
 import { AppButton, AppScreen } from '@/design-system/components';
 import { useSession } from '@/features/session/session-context';
-import type { Role } from '@/features/session/types';
-
-const roles: Array<{ value: Role; label: string; description: string }> = [
-  { value: 'client', label: 'Client', description: 'Post and track repair requests.' },
-  { value: 'pro', label: 'Pro', description: 'Take jobs and mark repairs complete.' },
-];
 
 export function ProfileScreen() {
-  const { session, selectRole, signOut } = useSession();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const isSessionActionLocked = useRef(false);
+  const { session, signOut } = useSession();
   if (!session) return null;
 
-  const otherRole: Role = session.role === 'client' ? 'pro' : 'client';
-
-  async function runSessionAction(action: () => Promise<void>) {
-    if (isSessionActionLocked.current) return;
-    isSessionActionLocked.current = true;
-    setIsSubmitting(true);
-    try {
-      await action();
-    } finally {
-      isSessionActionLocked.current = false;
-      setIsSubmitting(false);
-    }
-  }
+  const roleLabel = session.role === 'pro' ? 'Pro' : 'Client';
+  const roleDescription = session.role === 'pro' ? 'Take repair jobs and mark completed work.' : 'Post and track your repair requests.';
 
   return (
     <AppScreen>
       <View style={styles.content}>
         <Text style={styles.eyebrow}>Reparo test account</Text>
         <Text style={styles.title}>Your profile</Text>
-        <Text style={styles.description}>This local identity remains available after you log out, so you can try both Reparo workspaces.</Text>
+        <Text style={styles.description}>Log out to return to role selection. Your local identity and repair jobs remain available on this device.</Text>
         <View style={styles.details}>
-          {roles.map((option) => (
-            <View key={option.value} style={[styles.roleCard, session.role === option.value && styles.roleCardActive]}>
-            <Text style={styles.roleLabel}>{option.label}</Text>
-            <Text style={styles.roleDescription}>{option.description}</Text>
-            {session.role === option.value ? <Text style={styles.currentRole}>Current workspace</Text> : null}
-            </View>
-          ))}
+          <View style={[styles.roleCard, styles.roleCardActive]}>
+            <Text style={styles.roleLabel}>{roleLabel}</Text>
+            <Text style={styles.roleDescription}>{roleDescription}</Text>
+            <Text style={styles.currentRole}>Current workspace</Text>
+          </View>
           <View style={styles.identityCard}>
             <Text style={styles.identityLabel}>Local identity</Text>
             <Text selectable style={styles.identityValue}>{session.identityId}</Text>
@@ -52,10 +30,7 @@ export function ProfileScreen() {
           </View>
         </View>
         <View style={styles.actions}>
-          <AppButton accessibilityLabel={`Switch to ${otherRole === 'pro' ? 'Pro' : 'Client'}`} disabled={isSubmitting} tone="secondary" onPress={() => runSessionAction(() => selectRole(otherRole))}>
-            Switch to {otherRole === 'pro' ? 'Pro' : 'Client'}
-          </AppButton>
-          <AppButton accessibilityLabel="Log out" disabled={isSubmitting} tone="secondary" onPress={() => runSessionAction(signOut)}>Log out</AppButton>
+          <AppButton accessibilityLabel="Log out" tone="secondary" onPress={() => signOut()}>Log out</AppButton>
         </View>
       </View>
     </AppScreen>

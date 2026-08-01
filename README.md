@@ -15,7 +15,7 @@ An Expo React Native test app for a two-role repair marketplace: clients post re
 
 `src/app` contains routes only. Screen bodies, data access, and custom hooks stay in `src/features`, while the reusable atomic primitives and tokens live in `src/design-system`.
 
-The current job repository is local seeded data so both RBAC flows work without a backend. Login creates a stable local UUID identity for each role; logout removes only the active session, so identities and local jobs remain available when switching between Client and Pro. Replace `src/features/jobs/data/jobs-repository.ts` with the real API implementation when the service is ready; UI screens should continue to call only the hooks in `src/features/jobs/hooks`.
+The current job repository is local seeded data so both RBAC flows work without a backend. Login creates a stable local UUID identity for each role; logout removes only the active session, so identities and local jobs remain available when signing in as Client or Pro. Replace `src/features/jobs/data/jobs-repository.ts` with the real API implementation when the service is ready; UI screens should continue to call only the hooks in `src/features/jobs/hooks`.
 
 ## Run
 

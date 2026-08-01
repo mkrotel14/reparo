@@ -6,13 +6,15 @@ import { AppButton, AppScreen } from '@/design-system/components';
 import { JobCard } from '@/features/jobs/components/job-card';
 import { useCompleteJob, useCreateJob, useJobs } from '@/features/jobs/hooks/use-jobs';
 import { useRole } from '@/features/session/role-context';
+import { useSession } from '@/features/session/session-context';
 
 export function MyJobsScreen() {
   const { role } = useRole();
+  const { session } = useSession();
   const jobs = useJobs();
   const completeJob = useCompleteJob();
   const createJob = useCreateJob();
-  const myJobs = (jobs.data ?? []).filter((job) => (role === 'pro' ? job.proId === 'pro-1' : job.clientId === 'client-1'));
+  const myJobs = (jobs.data ?? []).filter((job) => (role === 'pro' ? job.proId === session?.identityId : job.clientId === session?.identityId));
   const isPro = role === 'pro';
 
   return (

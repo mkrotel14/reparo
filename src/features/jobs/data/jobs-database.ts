@@ -7,7 +7,8 @@ export async function getJobsDatabase() {
   const database = await getSessionDatabase();
   const versionRow = await database.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
 
-  if ((versionRow?.user_version ?? 0) < jobsDatabaseVersion) {
+  const version = versionRow?.user_version ?? 0;
+  if (version < 3) {
     await database.withExclusiveTransactionAsync(async (transaction) => {
       await transaction.execAsync(`
         CREATE TABLE IF NOT EXISTS jobs (
@@ -32,7 +33,7 @@ export async function getJobsDatabase() {
         PRAGMA user_version = 4;
       `);
     });
-  } else if ((versionRow?.user_version ?? 0) < jobsDatabaseVersion) {
+  } else if (version < jobsDatabaseVersion) {
     await database.withExclusiveTransactionAsync(async (transaction) => {
       const columns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(jobs)');
       if (!columns.some((column) => column.name === 'location')) {

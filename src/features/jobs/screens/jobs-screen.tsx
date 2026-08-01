@@ -29,7 +29,7 @@ export function JobsScreen() {
           <JobCard
             actionLabel="Take job"
             job={item}
-            onAction={() => claimJob.mutate({ jobId: item.id, proId: 'pro-1' })}
+            onAction={() => claimJob.mutate(item.id)}
           />
         )}
       />

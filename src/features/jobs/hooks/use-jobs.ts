@@ -23,8 +23,12 @@ export function useCreateJob() {
 
 export function useClaimJob() {
   const queryClient = useQueryClient();
+  const { session } = useSession();
   return useMutation({
-    mutationFn: ({ jobId, proId }: { jobId: string; proId: string }) => jobsRepository.claim(jobId, proId),
+    mutationFn: (jobId: string) => {
+      if (!session || session.role !== 'pro') throw new Error('Only Pros can claim jobs');
+      return jobsRepository.claim(jobId, session.identityId);
+    },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: jobsKey }),
   });
 }

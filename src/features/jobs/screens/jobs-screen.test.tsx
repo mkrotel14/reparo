@@ -3,16 +3,18 @@ import { render, screen } from '@testing-library/react-native';
 import type { PropsWithChildren } from 'react';
 
 import { JobsScreen } from '@/features/jobs/screens/jobs-screen';
-import { RoleProvider } from '@/features/session/role-context';
-
 jest.mock('@shopify/flash-list', () => ({
   FlashList: require('react-native').FlatList,
+}));
+
+jest.mock('@/features/session/role-context', () => ({
+  useRole: () => ({ role: 'pro', setRole: jest.fn() }),
 }));
 
 function Wrapper({ children }: PropsWithChildren) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { gcTime: 0, staleTime: Infinity } } });
   queryClient.setQueryData(['jobs'], [{ id: 'job-1', title: 'Leaking kitchen tap', location: 'Vila Madalena', budget: 180, status: 'open', clientId: 'client-1' }]);
-  return <QueryClientProvider client={queryClient}><RoleProvider>{children}</RoleProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
 describe('<JobsScreen />', () => {

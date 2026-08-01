@@ -33,7 +33,7 @@ export async function getJobsDatabase() {
         PRAGMA user_version = 4;
       `);
     });
-  } else if (version < jobsDatabaseVersion) {
+  } else {
     await database.withExclusiveTransactionAsync(async (transaction) => {
       const columns = await transaction.getAllAsync<{ name: string }>('PRAGMA table_info(jobs)');
       if (!columns.some((column) => column.name === 'location')) {
@@ -42,7 +42,7 @@ export async function getJobsDatabase() {
       if (!columns.some((column) => column.name === 'budget')) {
         await transaction.execAsync('ALTER TABLE jobs ADD COLUMN budget INTEGER NOT NULL DEFAULT 0');
       }
-      await transaction.execAsync('PRAGMA user_version = 4');
+      if (version < jobsDatabaseVersion) await transaction.execAsync('PRAGMA user_version = 4');
     });
   }
 

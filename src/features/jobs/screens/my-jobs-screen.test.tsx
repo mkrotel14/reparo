@@ -18,10 +18,10 @@ function Wrapper({ children }: PropsWithChildren) {
 }
 
 describe('<MyJobsScreen />', () => {
-  it('places repair-job creation in the Client workspace', async () => {
+  it('renders a Client empty state without an inline creation form', async () => {
     await render(<MyJobsScreen />, { wrapper: Wrapper });
 
-    expect(screen.getByText('My repair requests')).toBeOnTheScreen();
-    expect(screen.getByRole('button', { name: 'Post a repair job' })).toBeOnTheScreen();
+    expect(screen.getByText('No jobs here yet.')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'Post a repair job' })).not.toBeOnTheScreen();
   });
 });

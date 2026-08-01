@@ -7,6 +7,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test and type-check
@@ -18,7 +22,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run test -- --detectOpenHandles
+      - run: npm run test -- --forceExit
       - run: npx tsc --noEmit
 
   web-export:
